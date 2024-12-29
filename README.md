@@ -1,4 +1,4 @@
-# Web-Starter
+# Web-Starter-Kit
 
 Welcome to the **Web-Starter Kit**! This repository serves as a foundational
 template for creating modern web applications using **React** and
@@ -8,8 +8,10 @@ Firebase) and a functional payment system.
 Please note that this template is a **work in progress**. The following is a
 loose roadmap -
 
-- [ ] React Application Basics
+- [x] React Application Basics
 - [ ] Firebase Authentication
+- [x] React Application Styling
+- [ ] React Application Animations
 - [ ] Stripe Payment Support
 
 ## Features

@@ -1,6 +1,8 @@
 import React from "react";
 import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
+import { Button, Typography, Box } from "@mui/material";
+import { PageLayout } from "../components/PageLayout";
 
 export const HomePage: React.FC = () => {
   const handleLogout = async () => {
@@ -8,34 +10,25 @@ export const HomePage: React.FC = () => {
       await signOut(auth);
       alert("You have been logged out.");
     } catch (error) {
-      console.error("Error logging out: ", error);
+      console.error("Error logging out:", error);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 to-blue-600 text-white">
-      <header className="w-full p-4 bg-blue-800 shadow-md">
-        <h1 className="text-center text-3xl font-bold">
-          Welcome to the Home Page
-        </h1>
-      </header>
-      <main className="flex flex-col items-center mt-10">
-        <h2 className="text-2xl font-semibold mb-4">Hello, User!</h2>
-        <p className="text-lg text-center mb-8">
+    <PageLayout title="Home Page">
+      <Box sx={{ textAlign: "center", mt: 5 }}>
+        <Typography variant="h4" gutterBottom>
+          Hello, {auth.currentUser?.displayName}!
+        </Typography>
+
+        <Typography variant="body1" sx={{ mb: 3 }}>
           This is your homepage. Feel free to explore and enjoy the application.
-        </p>
-        <button
-          onClick={handleLogout}
-          className="px-6 py-2 bg-red-500 rounded-lg text-white font-medium hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
-        >
+        </Typography>
+
+        <Button variant="contained" color="secondary" onClick={handleLogout}>
           Logout
-        </button>
-      </main>
-      <footer className="w-full p-4 mt-auto bg-blue-800 shadow-md text-center">
-        <p className="text-sm">
-          &copy; {new Date().getFullYear()} Your App Name. All Rights Reserved.
-        </p>
-      </footer>
-    </div>
+        </Button>
+      </Box>
+    </PageLayout>
   );
 };

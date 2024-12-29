@@ -1,57 +1,165 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../config/firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Alert,
+  Box,
+  Link as MuiLink,
+} from "@mui/material";
+import { PageLayout } from "../components/PageLayout";
+import { Link as RouterLink } from "react-router-dom";
 
 export const SignupPage: React.FC = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match. Please try again.");
+      return;
+    }
+
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("Signup successful!");
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      await updateProfile(userCredential.user, {
+        displayName: `${firstName} ${lastName}`,
+      });
+
+      navigate("/");
     } catch (err) {
       setError((err as Error).message);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-4">Signup</h1>
-        <form onSubmit={handleSignup} className="space-y-4">
-          <div>
-            <label className="block text-gray-700">Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700">Password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            Signup
-          </button>
-        </form>
-        {error && <p className="mt-4 text-center text-red-500">{error}</p>}
-      </div>
-    </div>
+    <PageLayout title="Signup">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="60vh"
+      >
+        <Paper
+          elevation={4}
+          sx={{
+            p: 4,
+            backgroundColor: "background.paper",
+            borderRadius: 2,
+            width: "100%",
+            maxWidth: 400,
+          }}
+        >
+          <Typography variant="h5" textAlign="center" mb={2}>
+            Sign Up
+          </Typography>
+
+          <form onSubmit={handleSignup}>
+            {/* First Name and Last Name in a responsive Box */}
+            <Box
+              display="flex"
+              flexDirection={{ xs: "column", sm: "row" }}
+              gap={2}
+              sx={{ mb: 2 }}
+            >
+              <TextField
+                fullWidth
+                required
+                label="First Name"
+                variant="outlined"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <TextField
+                fullWidth
+                required
+                label="Last Name"
+                variant="outlined"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </Box>
+
+            {/* Email */}
+            <Box sx={{ mb: 2 }}>
+              <TextField
+                fullWidth
+                required
+                label="Email"
+                type="email"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Box>
+
+            {/* Password */}
+            <Box sx={{ mb: 2 }}>
+              <TextField
+                fullWidth
+                required
+                label="Password"
+                type="password"
+                variant="outlined"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Box>
+
+            {/* Confirm Password */}
+            <Box sx={{ mb: 3 }}>
+              <TextField
+                fullWidth
+                required
+                label="Confirm Password"
+                type="password"
+                variant="outlined"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </Box>
+
+            {/* Submit Button */}
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Signup
+            </Button>
+          </form>
+
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          {/* Link to Login */}
+          <Box textAlign="center" mt={3}>
+            <Typography variant="body2">
+              Already have an account?{" "}
+              <MuiLink component={RouterLink} to="/login" underline="hover">
+                Log in
+              </MuiLink>
+            </Typography>
+          </Box>
+        </Paper>
+      </Box>
+    </PageLayout>
   );
 };

@@ -7,8 +7,11 @@ import {
 } from "react-router-dom";
 import { auth } from "./config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { darkTheme } from "./config/theme";
 import { LoginPage } from "./pages/Login";
 import { HomePage } from "./pages/Home";
+import { SignupPage } from "./pages/Signup";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -29,22 +32,26 @@ const App: React.FC = () => {
   }
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/home" /> : <LoginPage />}
-        />
-        <Route
-          path="/"
-          element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="*"
-          element={<Navigate to={isAuthenticated ? "/home" : "/login"} />}
-        />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Router>
+        <Routes>
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+          />
+          <Route
+            path="/"
+            element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}
+          />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="*"
+            element={<Navigate to={isAuthenticated ? "/" : "/login"} />}
+          />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 };
 
