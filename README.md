@@ -70,7 +70,7 @@ Follow these steps to set up and run the project:
    # or
    yarn start
    ```
-   The app will be available at `http://localhost:3000`.
+   The app will be available at `http://localhost:5173`.
 
 ## Project Structure
 
@@ -78,6 +78,8 @@ Follow these steps to set up and run the project:
 web-starter/
 ├── public/           # Static assets (HTML, images, etc.)
 ├── src/
+│   ├── assets/       # Images
+│   ├── config/       # Configuration files (e.g., Firebase)
 │   ├── components/   # Reusable components (e.g., buttons, forms)
 │   ├── pages/        # Application pages (e.g., Home, Login, Checkout)
 │   ├── services/     # API integrations (e.g., Firebase, Stripe)
@@ -130,4 +132,3 @@ Here are the main scripts you can use:
 
 Contributions are welcome! If you have ideas for improvements or find any
 issues, feel free to open an issue or submit a pull request.
-
