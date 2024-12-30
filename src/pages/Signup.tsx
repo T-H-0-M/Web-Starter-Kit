@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../config/firebaseConfig";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import {
   Paper,
   Typography,
@@ -11,6 +16,7 @@ import {
   Box,
   Link as MuiLink,
 } from "@mui/material";
+import { Google } from "@mui/icons-material";
 import { PageLayout } from "../components/PageLayout";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -23,6 +29,8 @@ export const SignupPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+
+  const googleProvider = new GoogleAuthProvider();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,6 +58,16 @@ export const SignupPage: React.FC = () => {
     }
   };
 
+  const handleGoogleSignup = async () => {
+    setError(null);
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate("/");
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
   return (
     <PageLayout title="Signup">
       <Box
@@ -71,7 +89,6 @@ export const SignupPage: React.FC = () => {
           <Typography variant="h5" textAlign="center" mb={2}>
             Sign Up
           </Typography>
-
           <form onSubmit={handleSignup}>
             <Box
               display="flex"
@@ -97,7 +114,6 @@ export const SignupPage: React.FC = () => {
               />
             </Box>
 
-            {/* Email */}
             <Box sx={{ mb: 2 }}>
               <TextField
                 fullWidth
@@ -110,7 +126,6 @@ export const SignupPage: React.FC = () => {
               />
             </Box>
 
-            {/* Password */}
             <Box sx={{ mb: 2 }}>
               <TextField
                 fullWidth
@@ -135,17 +150,45 @@ export const SignupPage: React.FC = () => {
               />
             </Box>
 
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <Button
+              type="submit"
+              sx={{
+                mt: 2,
+                textTransform: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 48,
+              }}
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
               Signup
             </Button>
           </form>
-
           {error && (
             <Alert severity="error" sx={{ mt: 2 }}>
               {error}
             </Alert>
           )}
-
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            onClick={handleGoogleSignup}
+            startIcon={<Google sx={{ fontSize: 24 }} />}
+            sx={{
+              mt: 2,
+              textTransform: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 48,
+            }}
+          >
+            Sign up with Google
+          </Button>
           <Box textAlign="center" mt={3}>
             <Typography variant="body2">
               Already have an account?{" "}

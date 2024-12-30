@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { auth } from "../config/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import {
   Paper,
   Typography,
@@ -10,6 +14,7 @@ import {
   Box,
   Link as MuiLink,
 } from "@mui/material";
+import { Google } from "@mui/icons-material";
 import { PageLayout } from "../components/PageLayout";
 import { ResetPasswordModal } from "../components/ResetPasswordModal";
 import { Link as RouterLink } from "react-router-dom";
@@ -19,6 +24,8 @@ export const LoginPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [resetModalOpen, setResetModalOpen] = useState(false);
+
+  const provider = new GoogleAuthProvider();
   const handleOpenResetModal = () => setResetModalOpen(true);
   const handleCloseResetModal = () => setResetModalOpen(false);
 
@@ -28,6 +35,16 @@ export const LoginPage: React.FC = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert("Login successful!");
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError(null);
+    try {
+      await signInWithPopup(auth, provider);
+      alert("Google login successful!");
     } catch (err) {
       setError((err as Error).message);
     }
@@ -54,6 +71,8 @@ export const LoginPage: React.FC = () => {
           <Typography variant="h5" textAlign="center" mb={2}>
             Login
           </Typography>
+
+          {/* Email/Password form */}
           <form onSubmit={handleLogin}>
             <Box sx={{ mb: 3 }}>
               <TextField
@@ -77,15 +96,47 @@ export const LoginPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Box>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <Button
+              type="submit"
+              sx={{
+                mt: 2,
+                textTransform: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 48,
+              }}
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
               Login
             </Button>
           </form>
+
           {error && (
             <Alert severity="error" sx={{ mt: 2 }}>
               {error}
             </Alert>
           )}
+
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            onClick={handleGoogleLogin}
+            startIcon={<Google sx={{ fontSize: 24 }} />}
+            sx={{
+              mt: 2,
+              textTransform: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 48,
+            }}
+          >
+            Sign in with Google
+          </Button>
 
           <Box textAlign="center" mt={3}>
             <Typography variant="body2" mt={1}>
@@ -107,6 +158,7 @@ export const LoginPage: React.FC = () => {
           </Box>
         </Paper>
       </Box>
+
       <ResetPasswordModal
         open={resetModalOpen}
         onClose={handleCloseResetModal}

@@ -7,10 +7,7 @@ interface PageLayoutProps {
   children: React.ReactNode;
 }
 
-export const PageLayout: React.FC<PageLayoutProps> = ({
-  title = "My App",
-  children,
-}) => {
+export const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
   return (
     <Box
       sx={{
@@ -20,7 +17,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         backgroundColor: "background.default",
       }}
     >
-      <Navbar title={title} />
+      <Navbar />
 
       <Box
         component="main"
