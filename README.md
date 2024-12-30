@@ -9,7 +9,7 @@ Please note that this template is a **work in progress**. The following is a
 loose roadmap -
 
 - [x] React Application Basics
-- [ ] Firebase Authentication
+- [x] Firebase Authentication
 - [x] React Application Styling
 - [ ] React Application Animations
 - [ ] Stripe Payment Support
