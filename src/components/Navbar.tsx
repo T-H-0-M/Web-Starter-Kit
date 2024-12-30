@@ -66,7 +66,6 @@ export const Navbar: React.FC = () => {
         </Box>
 
         <Box display="flex" alignItems="center">
-          {/* Theme Toggle */}
           <IconButton color="inherit" sx={{ mr: 2 }} onClick={toggleTheme}>
             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
