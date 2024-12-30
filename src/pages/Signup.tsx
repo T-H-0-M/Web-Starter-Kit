@@ -73,7 +73,6 @@ export const SignupPage: React.FC = () => {
           </Typography>
 
           <form onSubmit={handleSignup}>
-            {/* First Name and Last Name in a responsive Box */}
             <Box
               display="flex"
               flexDirection={{ xs: "column", sm: "row" }}
@@ -124,7 +123,6 @@ export const SignupPage: React.FC = () => {
               />
             </Box>
 
-            {/* Confirm Password */}
             <Box sx={{ mb: 3 }}>
               <TextField
                 fullWidth
@@ -137,7 +135,6 @@ export const SignupPage: React.FC = () => {
               />
             </Box>
 
-            {/* Submit Button */}
             <Button type="submit" variant="contained" color="primary" fullWidth>
               Signup
             </Button>
@@ -149,7 +146,6 @@ export const SignupPage: React.FC = () => {
             </Alert>
           )}
 
-          {/* Link to Login */}
           <Box textAlign="center" mt={3}>
             <Typography variant="body2">
               Already have an account?{" "}

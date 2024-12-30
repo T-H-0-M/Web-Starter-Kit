@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-interface NavbarProps {
-  title: string;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ title }) => {
+export const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const isHomePage = location.pathname === "/";
 
   const handleLogout = async () => {
     try {
@@ -23,30 +31,66 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
 
   return (
     <AppBar position="static" enableColorOnDark>
-      <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          {title}
-        </Typography>
-        <Box>
-          <Button
-            color="secondary"
-            variant="outlined"
-            sx={{ mr: 2 }}
-            onClick={() => navigate("/")}
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+          onClick={() => navigate("/")}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              textTransform: "uppercase",
+              letterSpacing: 1,
+            }}
           >
-            Home
-          </Button>
+            YourApp
+          </Typography>
+        </Box>
+
+        <Box>
+          {isAuthenticated && !isHomePage && (
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mr: 2 }}
+              onClick={() => navigate("/")}
+            >
+              Home
+            </Button>
+          )}
+
+          {/* “About” button always shows */}
           <Button
-            color="secondary"
-            variant="outlined"
+            variant="contained"
+            color="primary"
             sx={{ mr: 2 }}
             onClick={() => navigate("/about")}
           >
             About
           </Button>
-          <Button color="secondary" variant="outlined" onClick={handleLogout}>
-            Logout
-          </Button>
+
+          {isAuthenticated ? (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

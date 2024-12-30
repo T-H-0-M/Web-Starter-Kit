@@ -11,12 +11,16 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import { PageLayout } from "../components/PageLayout";
+import { ResetPasswordModal } from "../components/ResetPasswordModal";
 import { Link as RouterLink } from "react-router-dom";
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+  const handleOpenResetModal = () => setResetModalOpen(true);
+  const handleCloseResetModal = () => setResetModalOpen(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,11 +91,11 @@ export const LoginPage: React.FC = () => {
             <Typography variant="body2" mt={1}>
               Forgot your password?{" "}
               <MuiLink
-                component={RouterLink}
-                to="/reset-password"
+                component="button"
+                onClick={handleOpenResetModal}
                 underline="hover"
               >
-                Reset here
+                Reset password
               </MuiLink>
             </Typography>
             <Typography variant="body2">
@@ -103,6 +107,10 @@ export const LoginPage: React.FC = () => {
           </Box>
         </Paper>
       </Box>
+      <ResetPasswordModal
+        open={resetModalOpen}
+        onClose={handleCloseResetModal}
+      />
     </PageLayout>
   );
 };
