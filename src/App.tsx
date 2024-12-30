@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { auth } from "./config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
@@ -13,6 +14,8 @@ import { LoginPage } from "./pages/Login";
 import { HomePage } from "./pages/Home";
 import { SignupPage } from "./pages/Signup";
 import { ThemeProvider, useThemeContext } from "./context/ThemeContext";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import "./App.css";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -43,12 +46,26 @@ const AppContent: React.FC<{ isAuthenticated: boolean }> = ({
   isAuthenticated,
 }) => {
   const { isDarkMode } = useThemeContext();
-
   return (
     <MuiThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
       <Router>
-        <Routes>
+        <AnimatedRoutes isAuthenticated={isAuthenticated} />
+      </Router>
+    </MuiThemeProvider>
+  );
+};
+
+// This component handles route transitions
+const AnimatedRoutes: React.FC<{ isAuthenticated: boolean }> = ({
+  isAuthenticated,
+}) => {
+  const location = useLocation();
+
+  return (
+    <TransitionGroup component={null}>
+      <CSSTransition key={location.key} classNames="fade" timeout={300}>
+        <Routes location={location}>
           <Route
             path="/login"
             element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
@@ -63,8 +80,8 @@ const AppContent: React.FC<{ isAuthenticated: boolean }> = ({
             element={<Navigate to={isAuthenticated ? "/" : "/login"} />}
           />
         </Routes>
-      </Router>
-    </MuiThemeProvider>
+      </CSSTransition>
+    </TransitionGroup>
   );
 };
 

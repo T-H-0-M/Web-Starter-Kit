@@ -11,8 +11,9 @@ loose roadmap -
 - [x] React Application Basics
 - [x] Firebase Authentication
 - [x] React Application Styling
-- [ ] React Application Animations
+- [x] React Application Animations
 - [ ] Stripe Payment Support
+- [ ] Comments
 
 ## Features
 
@@ -58,13 +59,13 @@ Follow these steps to set up and run the project:
    existing .env.example) in the root directory and add the following:
 
    ```env
-   REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
-   REACT_APP_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-   REACT_APP_FIREBASE_PROJECT_ID=your_firebase_project_id
-   REACT_APP_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
-   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
-   REACT_APP_FIREBASE_APP_ID=your_firebase_app_id
-   REACT_APP_STRIPE_PUBLIC_KEY=your_stripe_public_key
+   VITE_FIREBASE_API_KEY=your_firebase_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+   VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+   VITE_FIREBASE_APP_ID=your_firebase_app_id
+   VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
    ```
 
    Replace the placeholders with your actual Firebase and Stripe credentials.
