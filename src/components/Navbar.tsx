@@ -1,14 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+} from "@mui/material";
+import {
+  Brightness4 as Brightness4Icon,
+  Brightness7 as Brightness7Icon,
+} from "@mui/icons-material";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useThemeContext } from "../context/ThemeContext";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const { isDarkMode, toggleTheme } = useThemeContext();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -25,7 +38,7 @@ export const Navbar: React.FC = () => {
       alert("You have been logged out.");
       navigate("/login");
     } catch (error) {
-      console.error("Error logging out: ", error);
+      console.error("Error logging out:", error);
     }
   };
 
@@ -52,7 +65,12 @@ export const Navbar: React.FC = () => {
           </Typography>
         </Box>
 
-        <Box>
+        <Box display="flex" alignItems="center">
+          {/* Theme Toggle */}
+          <IconButton color="inherit" sx={{ mr: 2 }} onClick={toggleTheme}>
+            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+
           {isAuthenticated && !isHomePage && (
             <Button
               variant="contained"
@@ -63,8 +81,6 @@ export const Navbar: React.FC = () => {
               Home
             </Button>
           )}
-
-          {/* “About” button always shows */}
           <Button
             variant="contained"
             color="primary"
@@ -73,7 +89,6 @@ export const Navbar: React.FC = () => {
           >
             About
           </Button>
-
           {isAuthenticated ? (
             <Button
               variant="contained"

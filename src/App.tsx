@@ -7,11 +7,12 @@ import {
 } from "react-router-dom";
 import { auth } from "./config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import { darkTheme } from "./config/theme";
+import { ThemeProvider as MuiThemeProvider, CssBaseline } from "@mui/material";
+import { darkTheme, lightTheme } from "./config/theme";
 import { LoginPage } from "./pages/Login";
 import { HomePage } from "./pages/Home";
 import { SignupPage } from "./pages/Signup";
+import { ThemeProvider, useThemeContext } from "./context/ThemeContext";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -32,7 +33,19 @@ const App: React.FC = () => {
   }
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider>
+      <AppContent isAuthenticated={isAuthenticated} />
+    </ThemeProvider>
+  );
+};
+
+const AppContent: React.FC<{ isAuthenticated: boolean }> = ({
+  isAuthenticated,
+}) => {
+  const { isDarkMode } = useThemeContext();
+
+  return (
+    <MuiThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
       <Router>
         <Routes>
@@ -51,7 +64,7 @@ const App: React.FC = () => {
           />
         </Routes>
       </Router>
-    </ThemeProvider>
+    </MuiThemeProvider>
   );
 };
 
